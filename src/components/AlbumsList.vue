@@ -1,7 +1,10 @@
 <template>
     <section>
+
+        <FilterSelected @selectionChanged='setSelectionValue'/>
+
         <div class="container"> 
-            <AlbumCard v-for="(element,index) in albums" :key="index" :albumObject="element" />
+            <AlbumCard v-for="(element,index) in filteredAlbums()" :key="index" :albumObject="element" />
         </div>
     </section>
 </template>
@@ -11,6 +14,9 @@
 
     import axios from "axios";
     import AlbumCard from "./AlbumCard.vue" ; 
+    import FilterSelected from "./FilterSelected.vue" ; 
+
+
 
     export default {
 
@@ -18,11 +24,33 @@
 
         components: {
             AlbumCard,
+            FilterSelected,
         },
 
         data: function(){
             return{
                 albums: [],
+                selectionValue: "",
+            }
+        },
+
+        methods: {
+
+            setSelectionValue: function(selectedValue) {
+                this.selectionValue = selectedValue;
+            },
+
+            filteredAlbums: function() {
+
+                if (this.selectionValue === "") {
+                    return this.albums;
+                }
+
+                const filteredArray = this.albums.filter((album)=>{
+                    return album.genre === this.selectionValue;
+                })
+    
+                return filteredArray;
             }
         },
 
